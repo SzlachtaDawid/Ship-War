@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>War ship</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="goBack" id="goBack">
+      <p>Back</p>
+    </div>
+    <div class="welcome">
+      <h1>Welcome!</h1>
+      <h2>Choose level</h2>
+      <div class="levels">
+        <div class="level" data-level="easy">
+          <p data-level="easy">Easy</p>
+        </div>
+        <div class="level" data-level="medium">
+          <p data-level="medium">Medium</p>
+        </div>
+        <div class="level" data-level="hard">
+          <p data-level="hard">Hard</p>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="wrapper" id="map">
+        <div class="navY" id="navY">
+        </div>
+        <div class="navX" id="navX">
+        </div>
+      </div>
+    </div>
+    <div class="content2">
+      <h1>SHIP BASE</h1>
+      <div class="shipBase" id="shipBase">
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="./script.js" type="module"></script>
+  </body>
+</html>

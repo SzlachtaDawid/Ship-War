@@ -7,6 +7,7 @@ export class CreateBase {
 
   addShip() {
     let { level, shipBase, plan } = this;
+    const shipsArray = []
     const createShip = function (img, size, classAndId) {
       let ship = document.createElement("img");
       ship.src = img;
@@ -14,6 +15,11 @@ export class CreateBase {
       ship.id = classAndId;
       ship.dataset.size = size;
       shipBase.appendChild(ship);
+      const shipObject = {
+        element: ship,
+        size: size
+      }
+      shipsArray.push(shipObject)
     };
 
     const createShips = function (small, medium, big) {
@@ -36,7 +42,7 @@ export class CreateBase {
 
     switch (level) {
       case "easy":
-        createShips(3, 3, 2);
+        createShips(1, 0, 1);
         break;
       case "medium":
         createShips(3, 3, 3);
@@ -49,6 +55,76 @@ export class CreateBase {
         break;
     }
     plan.style.display = 'block'
+    const container = document.querySelector('.content2');
+    const blocker = document.createElement('div');
+    blocker.style.height = '500px';
+    blocker.style.width = '330px';
+    blocker.style.position = 'absolute'
+    blocker.style.left = '0';
+    blocker.style.top= '0';
+    blocker.style.display = 'none'
+    container.appendChild(blocker)
+    shipsArray.forEach(ship => {
+      ship.element.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+      ship.element.addEventListener('dragend',(e) => {
+        blocker.style.display = 'none'
+        if(e.dataTransfer.dropEffect === 'copy'){
+          ship.element.remove()
+        }
+      })
+      ship.element.addEventListener('dragstart', () => {
+        setTimeout(() => {
+          blocker.style.display = 'block'
+        }, 0);
+      })
+
+    });
+
+  }
+
+  backToBase(shipSize) {
+    let {shipBase} = this;
+    const createShip = function (img, size, classAndId) {
+      let ship = document.createElement("img");
+      ship.src = img;
+      ship.classList.add(classAndId);
+      ship.id = classAndId;
+      ship.dataset.size = size;
+      shipBase.appendChild(ship);
+      ship.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+      ship.addEventListener('dragend',(e) => {
+        if(e.dataTransfer.dropEffect === 'copy'){
+          ship.remove()
+        }
+      })
+    };
+
+    switch (shipSize) {
+      case "small":
+        createShip("/prod/zdj/smallShip.png", "small", "shipSmall");
+        break;
+      case "medium":
+        createShip("/prod/zdj/mediumShip.png", "medium", "shipMedium");
+        break;
+      case "big":
+        createShip("/prod/zdj/shipBig.png", "big", "shipBig");
+        break;  
+      default:
+        break;
+    }
+  }
+
+  checkBase() {
+    let {shipBase} = this;
+    if(!shipBase.hasChildNodes()){
+      return true
+    } else {
+      return false
+    }
   }
 
   deleteElements() {

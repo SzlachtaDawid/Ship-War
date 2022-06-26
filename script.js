@@ -6,6 +6,7 @@ import { CreateWordl } from "./module/createWordl.js";
 // deklaracja zmienny oraz stałych
 
 const map = document.getElementById("map");
+const gameCreator = document.getElementById("gameCreator")
 const navX = document.getElementById("navX");
 const navY = document.getElementById("navY");
 const shipBase = document.getElementById("shipBase");
@@ -14,12 +15,15 @@ const welcomePage = document.querySelector(".welcome");
 const content1 = document.querySelector(".content");
 const content2 = document.querySelector(".content2");
 const goBack = document.getElementById("goBack");
+const startGame = document.getElementById('play')
+const alert = document.getElementById('alert')
 let wordl;
 let base;
 
-// Tworzenie logiki
+// tworzenie mapy do Drag&Drop , nasłuchiwanie , podpidanie class, dodawanie , usuwanie statków, blokowie pul w które nie można upuścić statku, blokowanie napotkanych bugów. 
 
 levelsDiv.forEach((div) => {
+  // sprawdzamy który poziom rozgrywki został wybrany, dzięki czemu możemy stworzyć odpowiednie wielkości mapy oraz ilość statków do rozmieszczenia, wszelkie informacje przekazujemy do tworzonych class
   div.addEventListener("click", (e) => {
     let actuallShip;
     let level = e.target.dataset.level;
@@ -29,194 +33,73 @@ levelsDiv.forEach((div) => {
     let actualMapSize = wordl.drawingWordl();
     base = new CreateBase(level, shipBase, content2);
     base.addShip();
+    gameCreator.style.display = 'flex'
     const tiles = document.querySelectorAll(".shipContainer");
 
+    // sprawdzamy który statek został aktualnie wybrany, dzięki czemu później wiemy co konkretnie musimy stworzyć, oraz dodatkowo dodajemy czerwone pole w którym nie może znaleźć się myszka w chiwli upuszczania statku
     document.addEventListener("mousedown", (e) => {
-      actuallShip = e.target;
+      if(e.target.tagName === "IMG"){
+        actuallShip = e.target;
+        wordl.blockTiles(actualMapSize, 'red')
+      }
+    });
+    // cofamy czerwone pola z planszy
+    document.addEventListener("mouseup", () => {
+        wordl.blockTiles(actualMapSize, 'green')
     });
 
     for (let tile of tiles) {
+      // dragover (preventDefault) musi być zawsze aby inne eventy drag&drop działały poprawnie
       tile.addEventListener("dragover", (e) => {
         e.preventDefault();
       });
-
+      // nasłuchiwanie na kafelki, -> wiemy w którym miejscu mamy strowrzyć statek, mamy też dodane zabezpieczenia aby statek nie wysunął się poza plansze lub nie najechał na inny statek.
       tile.addEventListener("drop", (e) => {
         let position = e.target.dataset.xy.split(",");
-        let ship = new CreateShip2(position, e, actuallShip, actualMapSize);
-        console.log( e.target.classList.contains('test'))
-        if (e.target.tagName !== "IMG" && !e.target.classList.contains('test')) {
+        let statusAdd;
+        if (e.target.tagName !== "IMG" && !e.target.classList.contains('blocker')) {
+          let ship = new CreateShip2(position, e, actuallShip, actualMapSize);
           switch (actuallShip.dataset.size) {
             case "small":
-              ship.add();
+              statusAdd = ship.add();
               break;
             case "medium":
-              ship.add();
+              statusAdd = ship.add();
               break;
             case "big":
-              ship.add();
+              statusAdd = ship.add();
               break;
             default:
               console.log("błąd");
               break;
           }
+        } 
+        if(!statusAdd){
+          base.backToBase(actuallShip.dataset.size)
         }
+        wordl.blockTiles(actualMapSize, 'green')
       });
     }
   });
 });
 
+startGame.addEventListener('click', () => {
+  let checkBase = base.checkBase();
+  if(checkBase){
+    console.log('przechodzimy dalej')
+    alert.innerHTML = ''
+    const shipsPositons = document.querySelectorAll('.activeTile')
+    wordl.deleteTiles();
+    base.deleteElements();
+  } else {
+    alert.innerHTML = 'In the Base are ships'
+  }
+})
+
 goBack.addEventListener("click", () => {
   welcomePage.style.display = "flex";
   goBack.style.display = "none";
+  gameCreator.style.display = "none"
   wordl.deleteTiles();
   base.deleteElements();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const createWordl = function () {
-  const map = document.getElementById("map");
-  const level = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-
-  let y;
-  let x;
-  let yInX;
-  let xArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
-
-  // tworzenie całej mapy oraz dodawanie div'om odpowiednich oznaczeń w zależnośćy na którym polu leżą
-
-  for (const subTab of level) {
-    if (y === undefined) {
-      y = 1;
-    } else {
-      ++y;
-    }
-    for (const el of subTab) {
-      if (yInX === undefined) {
-        yInX = y - 1;
-      } else if (yInX === xArray.length) {
-        yInX = 0;
-      } else {
-        yInX;
-      }
-      x = xArray[yInX];
-      ++yInX;
-      let tiles = document.createElement("div");
-      tiles.classList.add("shipContainer");
-      tiles.setAttribute("data-xy", x + "," + y);
-      map.appendChild(tiles);
-    }
-  }
-
-  let actuallShip;
-
-  document.addEventListener("mousedown", (e) => {
-    actuallShip = e.target.dataset.size;
-    console.log(e.clientX);
-  });
-
-  // document.querySelector('body').addEventListener('dragend', (e) => {
-  //   console.log(e.dataTransfer.dropEffect)
-  // })
-
-  // Event listeners for draggable element imgBox
-  // ship.forEach((element) => {
-  //   element.addEventListener("dragstart", (e) => {
-  //     console.log("drag Start");
-  //     setTimeout(() => {
-  //       e.target.remove();
-  //     }, 0);
-  //   });
-  // });
-  // shipBig.forEach((element) => {
-  //   element.addEventListener("dragstart", (e) => {
-  //     console.log("drag Start");
-  //     setTimeout(() => {
-  //       e.target.remove();
-  //     }, 0);
-  //   });
-  // });
-
-  const tiles = document.querySelectorAll(".shipContainer");
-  for (let tile of tiles) {
-    tile.addEventListener("dragover", (e) => {
-      e.preventDefault();
-    });
-
-    // tile.addEventListener("dragenter", (e) => {
-    //   console.log("Wjechane");
-    // });
-
-    // tile.addEventListener("dragleave", (e) => {
-    //   console.log("Zjechane");
-    // });
-    let smallShip;
-
-    tile.addEventListener("drop", (e) => {
-      let position = e.target.dataset.xy.split(",");
-      smallShip = new CreateShip2(
-        "/prototyp/zdj/smallShip.png",
-        "50px",
-        position,
-        actuallShip,
-        e,
-        actuallShip
-      );
-      switch (actuallShip) {
-        case "small":
-          smallShip.remove();
-          smallShip.add();
-          smallShip.test();
-          break;
-        case "big":
-          let bigShip = new CreateShip(
-            "/prototyp/zdj/shipBig.png",
-            "150px",
-            position,
-            actuallShip,
-            e,
-            actuallShip
-          );
-          bigShip.add();
-          break;
-        default:
-          console.log("błąd");
-          break;
-      }
-    });
-  }
-};

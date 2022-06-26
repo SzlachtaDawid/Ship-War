@@ -92,6 +92,14 @@ export class CreateWordl {
     return xArray
   }
 
+  readyBoard (shipsPositions){
+    arrayPositions = [];
+    shipsPositions.forEach(ship => {
+      arrayPositions.push(ship.dataset.xy)
+    });
+    
+  }
+
 
   deleteTiles() {
     let {navX, navY, plan} = this;
@@ -102,5 +110,30 @@ export class CreateWordl {
     navX.innerHTML = '';
     navY.innerHTML = '';
     plan.style.display = 'none'
+  }
+
+  blockTiles(xArray,status) {
+    const activeTiles = document.querySelectorAll('.activeTile')
+    activeTiles.forEach(element => {
+      let position = element.dataset.xy.split(",");
+      for (let index = position[1] - 1, blocker = +position[1] + 1, arrayIndex = xArray.indexOf(position[0]) - 1 ; index <= blocker; index++,arrayIndex++ ) {
+        for (let x = 0, index = position[1] - 1; x <= 2; x++, index++) {
+          const blockTiles = document.querySelector(`[data-xy="${xArray[arrayIndex] + ',' + index}"]`);
+          if(blockTiles){
+            switch (status) {
+              case "red":
+                blockTiles.classList.add('blocker')
+                break;
+              case "green":
+                blockTiles.classList.remove('blocker')
+                break;
+              default:
+                console.log('błąd')
+                break;
+            }
+          }
+        }
+      }
+    });
   }
 }

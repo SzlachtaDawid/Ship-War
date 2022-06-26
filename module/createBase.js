@@ -25,17 +25,17 @@ export class CreateBase {
     const createShips = function (small, medium, big) {
       if (small !== 0) {
         for (let shipNumber = 0; shipNumber < small; shipNumber++) {
-         createShip("/prod/zdj/smallShip.png", "small", "shipSmall");
+         createShip("zdj/smallShip.png", "small", "shipSmall");
         }
       }
       if (medium !== 0) {
         for (let shipNumber = 0; shipNumber < medium; shipNumber++) {
-          createShip("/prod/zdj/mediumShip.png", "medium", "shipMedium");
+          createShip("zdj/mediumShip.png", "medium", "shipMedium");
         }
       }
       if (big !== 0) {
         for (let shipNumber = 0; shipNumber < big; shipNumber++) {
-          createShip("/prod/zdj/shipBig.png", "big", "shipBig");
+          createShip("zdj/shipBig.png", "big", "shipBig");
         }
       }
     };

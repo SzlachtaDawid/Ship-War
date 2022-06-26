@@ -2,12 +2,12 @@ export class CreateBase {
   constructor(level, shipBase, plan) {
     this.level = level;
     this.shipBase = shipBase;
-    this.plan = plan
+    this.plan = plan;
   }
 
   addShip() {
     let { level, shipBase, plan } = this;
-    const shipsArray = []
+    const shipsArray = [];
     const createShip = function (img, size, classAndId) {
       let ship = document.createElement("img");
       ship.src = img;
@@ -17,15 +17,15 @@ export class CreateBase {
       shipBase.appendChild(ship);
       const shipObject = {
         element: ship,
-        size: size
-      }
-      shipsArray.push(shipObject)
+        size: size,
+      };
+      shipsArray.push(shipObject);
     };
 
     const createShips = function (small, medium, big) {
       if (small !== 0) {
         for (let shipNumber = 0; shipNumber < small; shipNumber++) {
-         createShip("zdj/smallShip.png", "small", "shipSmall");
+          createShip("zdj/smallShip.png", "small", "shipSmall");
         }
       }
       if (medium !== 0) {
@@ -54,38 +54,36 @@ export class CreateBase {
       default:
         break;
     }
-    plan.style.display = 'block'
-    const container = document.querySelector('.content2');
-    const blocker = document.createElement('div');
-    blocker.style.height = '500px';
-    blocker.style.width = '330px';
-    blocker.style.position = 'absolute'
-    blocker.style.left = '0';
-    blocker.style.top= '0';
-    blocker.style.display = 'none'
-    container.appendChild(blocker)
-    shipsArray.forEach(ship => {
+    plan.style.display = "block";
+    const container = document.querySelector(".content2");
+    const blocker = document.createElement("div");
+    blocker.style.height = "500px";
+    blocker.style.width = "330px";
+    blocker.style.position = "absolute";
+    blocker.style.left = "0";
+    blocker.style.top = "0";
+    blocker.style.display = "none";
+    container.appendChild(blocker);
+    shipsArray.forEach((ship) => {
       ship.element.addEventListener("dragover", (e) => {
         e.preventDefault();
       });
-      ship.element.addEventListener('dragend',(e) => {
-        blocker.style.display = 'none'
-        if(e.dataTransfer.dropEffect === 'copy'){
-          ship.element.remove()
+      ship.element.addEventListener("dragend", (e) => {
+        blocker.style.display = "none";
+        if (e.dataTransfer.dropEffect === "copy") {
+          ship.element.remove();
         }
-      })
-      ship.element.addEventListener('dragstart', () => {
+      });
+      ship.element.addEventListener("dragstart", () => {
         setTimeout(() => {
-          blocker.style.display = 'block'
+          blocker.style.display = "block";
         }, 0);
-      })
-
+      });
     });
-
   }
 
   backToBase(shipSize) {
-    let {shipBase} = this;
+    let { shipBase } = this;
     const createShip = function (img, size, classAndId) {
       let ship = document.createElement("img");
       ship.src = img;
@@ -96,11 +94,11 @@ export class CreateBase {
       ship.addEventListener("dragover", (e) => {
         e.preventDefault();
       });
-      ship.addEventListener('dragend',(e) => {
-        if(e.dataTransfer.dropEffect === 'copy'){
-          ship.remove()
+      ship.addEventListener("dragend", (e) => {
+        if (e.dataTransfer.dropEffect === "copy") {
+          ship.remove();
         }
-      })
+      });
     };
 
     switch (shipSize) {
@@ -112,24 +110,24 @@ export class CreateBase {
         break;
       case "big":
         createShip("zdj/shipBig.png", "big", "shipBig");
-        break;  
+        break;
       default:
         break;
     }
   }
 
   checkBase() {
-    let {shipBase} = this;
-    if(!shipBase.hasChildNodes()){
-      return true
+    let { shipBase } = this;
+    if (!shipBase.hasChildNodes()) {
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   deleteElements() {
-    let {shipBase, plan } = this;
-    shipBase.innerHTML = '';
-    plan.style.display = 'none'
+    let { shipBase, plan } = this;
+    shipBase.innerHTML = "";
+    plan.style.display = "none";
   }
 }

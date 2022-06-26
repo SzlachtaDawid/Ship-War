@@ -42,7 +42,7 @@ export class CreateBase {
 
     switch (level) {
       case "easy":
-        createShips(1, 0, 1);
+        createShips(3, 2, 1);
         break;
       case "medium":
         createShips(3, 3, 3);
@@ -105,13 +105,13 @@ export class CreateBase {
 
     switch (shipSize) {
       case "small":
-        createShip("/prod/zdj/smallShip.png", "small", "shipSmall");
+        createShip("zdj/smallShip.png", "small", "shipSmall");
         break;
       case "medium":
-        createShip("/prod/zdj/mediumShip.png", "medium", "shipMedium");
+        createShip("zdj/mediumShip.png", "medium", "shipMedium");
         break;
       case "big":
-        createShip("/prod/zdj/shipBig.png", "big", "shipBig");
+        createShip("zdj/shipBig.png", "big", "shipBig");
         break;  
       default:
         break;
